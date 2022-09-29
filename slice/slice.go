@@ -7,7 +7,7 @@ import "math/rand"
 // Map create a new slice from an existing one
 // using a map function
 func Map[A, B any](as []A, f func(A) B) []B {
-	bs = make([]B, len(slice))
+	bs := make([]B, len(as))
 	for i, a := range as {
 		bs[i] = f(a)
 	}
