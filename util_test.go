@@ -8,29 +8,50 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRound(t *testing.T) {
-	rounded := util.Round(1.23454, 3)
-	assert.Equal(t, rounded, 1.235)
+func TestUtils(t *testing.T) {
+	assert := assert.New(t)
+	t.Run("Round", func(t *testing.T) {
+		rounded := util.Round(1.23454, 3)
+		assert.Equal(rounded, 1.235)
 
-	rounded = util.Round(1.23454, 4)
-	assert.Equal(t, rounded, 1.2345)
+		rounded = util.Round(1.23454, 4)
+		assert.Equal(rounded, 1.2345)
 
-	rounded = util.Round(1.23454, 5)
-	assert.Equal(t, rounded, 1.23454)
+		rounded = util.Round(1.23454, 5)
+		assert.Equal(rounded, 1.23454)
+	})
+
+	t.Run("Sum", func(t *testing.T) {
+		sum := util.Sum(1, 2, 3, 4)
+		assert.Equal(sum, 10)
+
+		sumS := util.Sum("a", "b", "c")
+		assert.Equal(sumS, "abc")
+	})
+
+	t.Run("Min", func(t *testing.T) {
+		m := util.Min(1, 2, 3, 3, 4, 5)
+		assert.Equal(m, 1)
+	})
+
+	t.Run("Max", func(t *testing.T) {
+		m := util.Max(1, 2, 3, 3, 4, 5)
+		assert.Equal(m, 5)
+	})
 }
 
 //revive:disable:empty-lines
 func TestSlices(t *testing.T) {
 	assert := assert.New(t)
-	t.Run("Map function", func(t *testing.T) {
+	t.Run("Map", func(t *testing.T) {
 		in := []int{1, 2, 3, 4}
 		out := slice.Map(in, func(i int) int { return i * i })
 		assert.Equal(out, []int{1, 4, 9, 16})
 	})
 
-	t.Run("Fold function", func(t *testing.T) {
+	t.Run("Reduce/Fold", func(t *testing.T) {
 		in := []int{1, 2, 3, 4}
-		out := slice.Fold(in, 0, func(x int, y int) int { return x + y })
+		out := slice.Reduce(in, func(x int, y int) int { return x + y }, 0)
 		assert.Equal(out, 10)
 	})
 
@@ -50,5 +71,32 @@ func TestSlices(t *testing.T) {
 		in := []int{1, 1, 1, 2, 3, 4, 1, 1, 1}
 		out := slice.RemoveAll(in, 1)
 		assert.Equal(out, []int{2, 3, 4})
+	})
+
+	t.Run("Reverse", func(t *testing.T) {
+		in := []int{1, 2, 3, 4, 5}
+		out := slice.Reverse(in)
+		assert.Equal(out, []int{5, 4, 3, 2, 1})
+
+		in = []int{1, 2, 3, 4}
+		out = slice.Reverse(in)
+		assert.Equal(out, []int{4, 3, 2, 1})
+
+		in = []int{1, 2}
+		out = slice.Reverse(in)
+		assert.Equal(out, []int{2, 1})
+	})
+
+	t.Run("Intersect", func(t *testing.T) {
+		in1 := []int{1, 2, 3, 4}
+		in2 := []int{3, 4, 5, 6}
+		out := slice.Intersect(in1, in2)
+		assert.Equal(out, []int{3, 4})
+	})
+
+	t.Run("Index", func(t *testing.T) {
+		in := []int{1, 2, 3, 4}
+		i := slice.Index(in, 3)
+		assert.Equal(i, 2)
 	})
 }

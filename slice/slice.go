@@ -16,11 +16,17 @@ func Map[A, B any](as []A, f func(A) B) []B {
 
 // Fold folds the slice into a single value
 // using the given function and accumulator
-func Fold[A, B any](as []A, acc B, f func(A, B) B) B {
+func Fold[A, B any](as []A, f func(A, B) B, acc B) B {
 	for _, a := range as {
 		acc = f(a, acc)
 	}
 	return acc
+}
+
+// Reduce reduces the slice to a single value
+// using the given fucntion and accumulator
+func Reduce[A, B any](as []A, f func(A, B) B, acc B) B {
+	return Fold(as, f, acc)
 }
 
 // Contains checks for the existence of an
@@ -90,4 +96,34 @@ func RemoveAll[T comparable](xs []T, v T) []T {
 		}
 	}
 	return result
+}
+
+// Reverse reverses the order of a slice
+func Reverse[T any](a []T) []T {
+	for i := 0; i < len(a)/2; i++ {
+		pos := len(a) - i - 1
+		a[i], a[pos] = a[pos], a[i]
+	}
+	return a
+}
+
+// Intersect returns the intersection of two slices
+func Intersect[T comparable](as []T, bs []T) (ts []T) {
+	for _, a := range as {
+		if Contains(bs, a) {
+			ts = append(ts, a)
+		}
+	}
+	return ts
+}
+
+// Index returns the index of a value if it exists
+// it will return -1 if it does not exist in the slice
+func Index[T comparable](ts []T, v T) int {
+	for i, t := range ts {
+		if t == v {
+			return i
+		}
+	}
+	return -1
 }

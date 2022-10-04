@@ -2,7 +2,10 @@ module github.com/linuxfreak003/util
 
 go 1.19
 
-require github.com/stretchr/testify v1.8.0
+require (
+	github.com/stretchr/testify v1.8.0
+	golang.org/x/exp v0.0.0-20221002003631-540bb7301a08
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
