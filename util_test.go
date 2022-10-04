@@ -49,25 +49,43 @@ func TestSlices(t *testing.T) {
 		assert.Equal(out, []int{1, 4, 9, 16})
 	})
 
+	t.Run("ToMap", func(t *testing.T) {
+		type MyType struct {
+			Id        int64
+			FirstName string
+			LastName  string
+		}
+		in := []MyType{
+			{Id: 1, FirstName: "Bob", LastName: "Ross"},
+			{Id: 2, FirstName: "Bob", LastName: "Marley"},
+		}
+		out := slice.ToMap(in, func(x MyType) (int64, string) {
+			return x.Id, x.FirstName + " " + x.LastName
+		})
+		assert.Len(out, 2)
+		assert.Equal(out[1], "Bob Ross")
+		assert.Equal(out[2], "Bob Marley")
+	})
+
 	t.Run("Reduce/Fold", func(t *testing.T) {
 		in := []int{1, 2, 3, 4}
 		out := slice.Reduce(in, func(x int, y int) int { return x + y }, 0)
 		assert.Equal(out, 10)
 	})
 
-	t.Run("Deduplicate function", func(t *testing.T) {
+	t.Run("Deduplicate", func(t *testing.T) {
 		in := []int{1, 2, 3, 4, 1, 2, 3, 4}
 		out := slice.Deduplicate(in)
 		assert.Equal(out, []int{1, 2, 3, 4})
 	})
 
-	t.Run("Remove function", func(t *testing.T) {
+	t.Run("Remove", func(t *testing.T) {
 		in := []int{1, 1, 1, 2, 3, 4, 1, 1, 1}
 		out := slice.Remove(in, 1)
 		assert.Equal(out, []int{1, 1, 2, 3, 4, 1, 1, 1})
 	})
 
-	t.Run("RemoveAll function", func(t *testing.T) {
+	t.Run("RemoveAll", func(t *testing.T) {
 		in := []int{1, 1, 1, 2, 3, 4, 1, 1, 1}
 		out := slice.RemoveAll(in, 1)
 		assert.Equal(out, []int{2, 3, 4})

@@ -14,6 +14,18 @@ func Map[A, B any](as []A, f func(A) B) []B {
 	return bs
 }
 
+// ToMap converts a slice to a map using
+// the given function which takes an element
+// and returns a key and value
+func ToMap[K comparable, V, A any](as []A, f func(A) (K, V)) map[K]V {
+	result := make(map[K]V)
+	for _, a := range as {
+		k, v := f(a)
+		result[k] = v
+	}
+	return result
+}
+
 // Fold folds the slice into a single value
 // using the given function and accumulator
 func Fold[A, B any](as []A, f func(A, B) B, acc B) B {
