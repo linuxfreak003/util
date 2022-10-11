@@ -3,7 +3,8 @@ package util_test
 import (
 	"testing"
 
-	"github.com/linuxfreak003/util"
+	"github.com/linuxfreak003/util/maps"
+	"github.com/linuxfreak003/util/number"
 	"github.com/linuxfreak003/util/slice"
 	"github.com/stretchr/testify/assert"
 )
@@ -11,31 +12,31 @@ import (
 func TestUtils(t *testing.T) {
 	assert := assert.New(t)
 	t.Run("Round", func(t *testing.T) {
-		rounded := util.Round(1.23454, 3)
+		rounded := number.Round(1.23454, 3)
 		assert.Equal(rounded, 1.235)
 
-		rounded = util.Round(1.23454, 4)
+		rounded = number.Round(1.23454, 4)
 		assert.Equal(rounded, 1.2345)
 
-		rounded = util.Round(1.23454, 5)
+		rounded = number.Round(1.23454, 5)
 		assert.Equal(rounded, 1.23454)
 	})
 
 	t.Run("Sum", func(t *testing.T) {
-		sum := util.Sum(1, 2, 3, 4)
+		sum := number.Sum(1, 2, 3, 4)
 		assert.Equal(sum, 10)
 
-		sumS := util.Sum("a", "b", "c")
+		sumS := number.Sum("a", "b", "c")
 		assert.Equal(sumS, "abc")
 	})
 
 	t.Run("Min", func(t *testing.T) {
-		m := util.Min(1, 2, 3, 3, 4, 5)
+		m := number.Min(1, 2, 3, 3, 4, 5)
 		assert.Equal(m, 1)
 	})
 
 	t.Run("Max", func(t *testing.T) {
-		m := util.Max(1, 2, 3, 3, 4, 5)
+		m := number.Max(1, 2, 3, 3, 4, 5)
 		assert.Equal(m, 5)
 	})
 }
@@ -116,5 +117,34 @@ func TestSlices(t *testing.T) {
 		in := []int{1, 2, 3, 4}
 		i := slice.Index(in, 3)
 		assert.Equal(i, 2)
+	})
+}
+
+func TestMaps(t *testing.T) {
+	assert := assert.New(t)
+	t.Run("ToSlice", func(t *testing.T) {
+		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+		out := maps.ToSlice(in)
+		assert.Equal(out, []maps.Pair[string, int]{
+			maps.Pair[string, int]{Key: "a", Value: 1},
+			maps.Pair[string, int]{Key: "b", Value: 2},
+			maps.Pair[string, int]{Key: "c", Value: 3},
+			maps.Pair[string, int]{Key: "d", Value: 4},
+		})
+	})
+}
+
+func TestSort(t *testing.T) {
+	assert := assert.New(t)
+	t.Run("Sort", func(t *testing.T) {
+		in := []int{1, 4, 3, 2}
+		out := slice.Sort(in)
+		assert.Equal(out, []int{1, 2, 3, 4})
+	})
+
+	t.Run("DumbSort", func(t *testing.T) {
+		in := []int{1, 4, 3, 2}
+		out := slice.DumbSort(in)
+		assert.Equal(out, []int{1, 2, 3, 4})
 	})
 }
