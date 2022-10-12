@@ -15,3 +15,11 @@ func ToSlice[K, V comparable](m map[K]V) (result []Pair[K, V]) {
 	}
 	return result
 }
+
+// Values returns a slice of all the values in a map
+func Values[K comparable, V any](m map[K]V) (values []V) {
+	for _, v := range m {
+		values = append(values, v)
+	}
+	return values
+}
