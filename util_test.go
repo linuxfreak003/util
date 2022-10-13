@@ -3,6 +3,7 @@ package util_test
 import (
 	"testing"
 
+	"github.com/linuxfreak003/util/cache"
 	"github.com/linuxfreak003/util/maps"
 	"github.com/linuxfreak003/util/number"
 	"github.com/linuxfreak003/util/slice"
@@ -146,5 +147,17 @@ func TestSort(t *testing.T) {
 		in := []int{1, 4, 3, 2}
 		out := slice.DumbSort(in)
 		assert.Equal(out, []int{1, 2, 3, 4})
+	})
+}
+
+func TestCache(t *testing.T) {
+	assert := assert.New(t)
+	t.Run("Use cache", func(t *testing.T) {
+		c := cache.New("", "")
+		worked := c.Set("a", "b")
+		assert.True(worked)
+		v, b := c.Get("a")
+		assert.True(b)
+		assert.Equal(v, "b")
 	})
 }
