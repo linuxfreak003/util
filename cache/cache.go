@@ -2,34 +2,65 @@
 // that supports generic types
 package cache
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
-// Cache is a simple cache using a map
-type Cache[K comparable, V any] struct {
-	cache map[K]V
-	mutex sync.Mutex
+// Cache is a simple cache interface
+type Cache[K comparable, V any] interface {
+	Set(K, V, time.Duration) bool
+	Get(K) (V, bool)
+}
+
+// cacheImpl is a simple cache implementation using a map
+type cacheImpl[K comparable, V any] struct {
+	cache map[K]*Entry[V]
+	mutex *sync.Mutex
+}
+
+// Entry is the entity saved in the cache
+type Entry[V any] struct {
+	Value       V
+	LastUpdated time.Time
+	TTL         time.Duration
 }
 
 // New returns a new Cache
 // It takes any instance of the Key and Value
 // to be able to infer the types
-func New[K comparable, V any](_ K, _ V) *Cache[K, V] {
-	return &Cache[K, V]{
-		cache: make(map[K]V),
+func New[K comparable, V any](_ K, _ V) Cache[K, V] {
+	return &cacheImpl[K, V]{
+		cache: make(map[K]*Entry[V]),
+		mutex: &sync.Mutex{},
 	}
 }
 
 // Set sets a value in the cache
-func (c *Cache[K, V]) Set(key K, value V) bool {
+func (c *cacheImpl[K, V]) Set(key K, value V, ttl time.Duration) bool {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	c.cache[key] = value
+	c.cache[key] = &Entry[V]{
+		Value:       value,
+		LastUpdated: time.Now(),
+		TTL:         ttl,
+	}
 	return true
 }
 
 // Get gets a value from the cache
-func (c *Cache[K, V]) Get(key K) (V, bool) {
-	v, b := c.cache[key]
-	return v, b
+func (c *cacheImpl[K, V]) Get(key K) (V, bool) {
+	entry, inCache := c.cache[key]
+
+	var v V
+	if !inCache {
+		return v, false
+	}
+
+	if time.Now().Sub(entry.LastUpdated) > entry.TTL {
+		return v, false
+	}
+
+	return entry.Value, true
 }

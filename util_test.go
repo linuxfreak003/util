@@ -2,6 +2,7 @@ package util_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/linuxfreak003/util/cache"
 	"github.com/linuxfreak003/util/maps"
@@ -154,7 +155,7 @@ func TestCache(t *testing.T) {
 	assert := assert.New(t)
 	t.Run("Use cache", func(t *testing.T) {
 		c := cache.New("", "")
-		worked := c.Set("a", "b")
+		worked := c.Set("a", "b", time.Hour)
 		assert.True(worked)
 		v, b := c.Get("a")
 		assert.True(b)
