@@ -128,13 +128,28 @@ func TestMaps(t *testing.T) {
 		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
 		out := maps.ToSlice(in)
 		assert.Len(out, 4)
-		for k, v := range []maps.Pair[string, int]{
-			maps.Pair[string, int]{Key: "a", Value: 1},
-			maps.Pair[string, int]{Key: "b", Value: 2},
-			maps.Pair[string, int]{Key: "c", Value: 3},
-			maps.Pair[string, int]{Key: "d", Value: 4},
-		} {
-			assert.Equal(out[k], v)
+		for _, p := range out {
+			assert.Equal(in[p.Key], p.Value)
+		}
+	})
+
+	t.Run("Values", func(t *testing.T) {
+		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+		out := maps.Values(in)
+		assert.Len(out, 4)
+		for _, v := range in {
+			assert.Contains(out, v)
+		}
+	})
+
+	t.Run("Values", func(t *testing.T) {
+		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+		out := maps.MapValues(in, func(i int) float64 {
+			return float64(i * i)
+		})
+		assert.Len(out, 4)
+		for k, v := range in {
+			assert.EqualValues(out[k], v*v)
 		}
 	})
 }
