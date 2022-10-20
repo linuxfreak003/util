@@ -127,12 +127,15 @@ func TestMaps(t *testing.T) {
 	t.Run("ToSlice", func(t *testing.T) {
 		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
 		out := maps.ToSlice(in)
-		assert.Equal(out, []maps.Pair[string, int]{
+		assert.Len(out, 4)
+		for k, v := range []maps.Pair[string, int]{
 			maps.Pair[string, int]{Key: "a", Value: 1},
 			maps.Pair[string, int]{Key: "b", Value: 2},
 			maps.Pair[string, int]{Key: "c", Value: 3},
 			maps.Pair[string, int]{Key: "d", Value: 4},
-		})
+		} {
+			assert.Equal(out[k], v)
+		}
 	})
 }
 
@@ -156,6 +159,14 @@ func TestCache(t *testing.T) {
 	t.Run("Use cache", func(t *testing.T) {
 		c := cache.New("", "")
 		worked := c.Set("a", "b", time.Hour)
+		assert.True(worked)
+		v, b := c.Get("a")
+		assert.True(b)
+		assert.Equal(v, "b")
+	})
+	t.Run("Use cache with no duration", func(t *testing.T) {
+		c := cache.New("", "")
+		worked := c.Set("a", "b", 0)
 		assert.True(worked)
 		v, b := c.Get("a")
 		assert.True(b)

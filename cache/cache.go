@@ -58,7 +58,7 @@ func (c *cacheImpl[K, V]) Get(key K) (V, bool) {
 		return v, false
 	}
 
-	if time.Now().Sub(entry.LastUpdated) > entry.TTL {
+	if entry.TTL != 0 && time.Now().Sub(entry.LastUpdated) > entry.TTL {
 		return v, false
 	}
 
