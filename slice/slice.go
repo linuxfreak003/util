@@ -139,3 +139,16 @@ func Index[T comparable](ts []T, v T) int {
 	}
 	return -1
 }
+
+// MapFilter combines Map and Filter into one process
+// It takes a function that takes a value of type A
+// and returns a value of type B, and a bool for whether
+// or not to keep the value.
+func MapFilter[A, B any](slice []A, f func(A) (B, bool)) (out []B) {
+	for _, a := range slice {
+		if b, keep := f(a); keep {
+			out = append(out, b)
+		}
+	}
+	return out
+}
