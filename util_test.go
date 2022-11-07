@@ -120,6 +120,12 @@ func TestSlices(t *testing.T) {
 		i := slice.Index(in, 3)
 		assert.Equal(i, 2)
 	})
+
+	t.Run("Sort", func(t *testing.T) {
+		in := []int{4, 1, 2, 3, 31, 5, 3, 8}
+		out := slice.Sort(in, func(a, b int) bool { return a < b })
+		assert.Equal(out, []int{1, 2, 3, 3, 4, 5, 8, 31})
+	})
 }
 
 func TestMaps(t *testing.T) {
@@ -156,9 +162,9 @@ func TestMaps(t *testing.T) {
 
 func TestSort(t *testing.T) {
 	assert := assert.New(t)
-	t.Run("Sort", func(t *testing.T) {
+	t.Run("BubbleSort", func(t *testing.T) {
 		in := []int{1, 4, 3, 2}
-		out := slice.Sort(in)
+		out := slice.BubbleSort(in)
 		assert.Equal(out, []int{1, 2, 3, 4})
 	})
 

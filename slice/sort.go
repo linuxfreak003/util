@@ -7,8 +7,8 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-// Sort will sort a slice
-func Sort[T constraints.Ordered](ts []T) []T {
+// BubbleSort will sort a slice
+func BubbleSort[T constraints.Ordered](ts []T) []T {
 	for x := 0; x < len(ts); x++ {
 		for i := 0; i < len(ts)-1; i++ {
 			if ts[i] > ts[i+1] {

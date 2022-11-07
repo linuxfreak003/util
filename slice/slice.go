@@ -63,6 +63,29 @@ func Shuffle[T any](l []T) []T {
 	return l
 }
 
+// Sort sorts a slice
+func Sort[T any](l []T, less func(T, T) bool) []T {
+	return quickMergeSort(l, less)
+}
+
+func quickMergeSort[T any](l []T, less func(T, T) bool) []T {
+	if len(l) <= 1 {
+		return l
+	}
+	pivot := l[0]
+	var smaller []T
+	var bigger []T
+	for _, t := range l[1:] {
+		if less(t, pivot) {
+			smaller = append(smaller, t)
+		} else {
+			bigger = append(bigger, t)
+		}
+	}
+
+	return append(append(quickMergeSort(smaller, less), pivot), quickMergeSort(bigger, less)...)
+}
+
 // Filter filters a slice using the given function
 func Filter[T any](in []T, f func(T) bool) (out []T) {
 	for _, t := range in {
