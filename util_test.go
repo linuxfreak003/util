@@ -132,7 +132,18 @@ func TestMaps(t *testing.T) {
 	assert := assert.New(t)
 	t.Run("ToSlice", func(t *testing.T) {
 		in := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
-		out := maps.ToSlice(in)
+		out := maps.ToSlice(in, func(k string, v int) struct {
+			Key   string
+			Value int
+		} {
+			return struct {
+				Key   string
+				Value int
+			}{
+				Key:   k,
+				Value: v,
+			}
+		})
 		assert.Len(out, 4)
 		for _, p := range out {
 			assert.Equal(in[p.Key], p.Value)

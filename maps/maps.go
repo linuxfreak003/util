@@ -3,25 +3,21 @@ package maps
 
 // ToSlice converts a map to a list of
 // key/value pairs.
-func ToSlice[K, V comparable](m map[K]V) (result []struct {
-	Key   K
-	Value V
-}) {
+func ToSlice[K comparable, V, T any](m map[K]V, f func(K, V) T) []T {
+	out := make([]T, len(m))
+	i := 0
 	for k, v := range m {
-		result = append(result, struct {
-			Key   K
-			Value V
-		}{k, v})
+		out[i] = f(k, v)
+		i++
 	}
-	return result
+	return out
 }
 
 // Values returns a slice of all the values in a map
-func Values[K comparable, V any](m map[K]V) (values []V) {
-	for _, v := range m {
-		values = append(values, v)
-	}
-	return values
+func Values[K comparable, V any](m map[K]V) []V {
+	return ToSlice(m, func(_ K, v V) V {
+		return v
+	})
 }
 
 // MapValues transforms the values of the map using the given function
