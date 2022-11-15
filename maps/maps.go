@@ -1,8 +1,8 @@
 // Package maps contains generic functions for maps
 package maps
 
-// ToSlice converts a map to a list of
-// key/value pairs.
+// ToSlice converts a map to a slice
+// using a given function
 func ToSlice[K comparable, V, T any](m map[K]V, f func(K, V) T) []T {
 	out := make([]T, len(m))
 	i := 0
@@ -17,6 +17,13 @@ func ToSlice[K comparable, V, T any](m map[K]V, f func(K, V) T) []T {
 func Values[K comparable, V any](m map[K]V) []V {
 	return ToSlice(m, func(_ K, v V) V {
 		return v
+	})
+}
+
+// Keys returns a slice of all the keys in a map
+func Keys[K comparable, V any](m map[K]V) []K {
+	return ToSlice(m, func(k K, _ V) V {
+		return k
 	})
 }
 
