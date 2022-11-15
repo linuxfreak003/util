@@ -142,14 +142,28 @@ func Reverse[T any](a []T) []T {
 	return a
 }
 
-// Intersect returns the intersection of two slices
-func Intersect[T comparable](as []T, bs []T) (ts []T) {
-	for _, a := range as {
-		if Contains(bs, a) {
-			ts = append(ts, a)
+// Intersection returns the intersection of two slices
+func Intersection[T comparable](as []T, bs []T) []T {
+	return Filter(as, func(a T) bool {
+		return Contains(bs, a)
+	})
+}
+
+// Union returns the union of two slices
+func Union[T comparable](as []T, bs []T) []T {
+	for _, b := range bs {
+		if !Contains(as, b) {
+			as = append(as, b)
 		}
 	}
-	return ts
+	return as
+}
+
+// Difference returns the difference of two sets (A - B)
+func Difference[T comparable](as []T, bs []T) []T {
+	return Filter(as, func(a T) bool {
+		return !Contains(bs, a)
+	})
 }
 
 // Index returns the index of a value if it exists
