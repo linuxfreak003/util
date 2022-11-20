@@ -22,7 +22,7 @@ func Values[K comparable, V any](m map[K]V) []V {
 
 // Keys returns a slice of all the keys in a map
 func Keys[K comparable, V any](m map[K]V) []K {
-	return ToSlice(m, func(k K, _ V) V {
+	return ToSlice(m, func(k K, _ V) K {
 		return k
 	})
 }

@@ -108,10 +108,10 @@ func TestSlices(t *testing.T) {
 		assert.Equal(out, []int{2, 1})
 	})
 
-	t.Run("Intersect", func(t *testing.T) {
+	t.Run("Intersection", func(t *testing.T) {
 		in1 := []int{1, 2, 3, 4}
 		in2 := []int{3, 4, 5, 6}
-		out := slice.Intersect(in1, in2)
+		out := slice.Intersection(in1, in2)
 		assert.Equal(out, []int{3, 4})
 	})
 

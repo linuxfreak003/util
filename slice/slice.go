@@ -68,6 +68,36 @@ func Sort[T any](l []T, less func(T, T) bool) []T {
 	return quickMergeSort(l, less)
 }
 
+func quickSort[T any](l []T, less func(T, T) bool, lo, hi int) []T {
+	if lo >= 0 && hi >= 0 && lo < hi {
+		var p int
+		l, p = partition(l, less, lo, hi)
+		l = quickSort(l, less, lo, p)
+		l = quickSort(l, less, p+1, hi)
+	}
+	return l
+}
+
+func partition[T any](l []T, less func(T, T) bool, lo, hi int) ([]T, int) {
+	pivot := l[(hi+lo)/2]
+
+	i := lo
+	j := hi
+
+	for {
+		for less(l[i], pivot) {
+			i++
+		}
+		for less(pivot, l[j]) {
+			j--
+		}
+		if i >= j {
+			return l, j
+		}
+		l[i], l[j] = l[j], l[i]
+	}
+}
+
 func quickMergeSort[T any](l []T, less func(T, T) bool) []T {
 	if len(l) <= 1 {
 		return l
