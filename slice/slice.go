@@ -2,7 +2,9 @@
 // functions on slices
 package slice
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // Map create a new slice from an existing one
 // using a map function
@@ -65,55 +67,43 @@ func Shuffle[T any](l []T) []T {
 
 // Sort sorts a slice
 func Sort[T any](l []T, less func(T, T) bool) []T {
-	return quickMergeSort(l, less)
+	return mergeSort(l, less)
 }
 
-func quickSort[T any](l []T, less func(T, T) bool, lo, hi int) []T {
-	if lo >= 0 && hi >= 0 && lo < hi {
-		var p int
-		l, p = partition(l, less, lo, hi)
-		l = quickSort(l, less, lo, p)
-		l = quickSort(l, less, p+1, hi)
-	}
-	return l
-}
-
-func partition[T any](l []T, less func(T, T) bool, lo, hi int) ([]T, int) {
-	pivot := l[(hi+lo)/2]
-
-	i := lo
-	j := hi
-
-	for {
-		for less(l[i], pivot) {
-			i++
-		}
-		for less(pivot, l[j]) {
-			j--
-		}
-		if i >= j {
-			return l, j
-		}
-		l[i], l[j] = l[j], l[i]
-	}
-}
-
-func quickMergeSort[T any](l []T, less func(T, T) bool) []T {
+func mergeSort[T any](l []T, less func(T, T) bool) []T {
+	// Base case
 	if len(l) <= 1 {
 		return l
 	}
-	pivot := l[0]
-	var smaller []T
-	var bigger []T
-	for _, t := range l[1:] {
-		if less(t, pivot) {
-			smaller = append(smaller, t)
+
+	// Split slice in half
+	mid := len(l) / 2
+	left := mergeSort(l[:mid], less)
+	right := mergeSort(l[mid:], less)
+
+	// Merge contents of each side
+	result := make([]T, len(left)+len(right))
+	var i, j, r int
+	for ; i < len(left) && j < len(right); r++ {
+		if less(left[i], right[j]) {
+			result[r] = left[i]
+			i++
 		} else {
-			bigger = append(bigger, t)
+			result[r] = right[j]
+			j++
 		}
 	}
 
-	return append(append(quickMergeSort(smaller, less), pivot), quickMergeSort(bigger, less)...)
+	// Finish adding any remaining items
+	for ; i < len(left); i++ {
+		result[r] = left[i]
+		r++
+	}
+	for ; j < len(right); j++ {
+		result[r] = right[j]
+		r++
+	}
+	return result
 }
 
 // Filter filters a slice using the given function
