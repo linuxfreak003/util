@@ -116,18 +116,24 @@ func Filter[T any](in []T, f func(T) bool) (out []T) {
 	return out
 }
 
-// Deduplicate deduplicates a slice
+/* TODO: Add options here
+Options:
+* KeepFirst
+* KeepLast
+* MergeFunc
+* EqualityFunc
+*/
+
+// Deduplicate removes duplicates in a slice
 func Deduplicate[T comparable](in []T) []T {
 	seen := map[T]struct{}{}
-	result := []T{}
-	for _, el := range in {
-		if _, ok := seen[el]; ok {
-			continue
+	return Filter(in, func(t T) bool {
+		if _, ok := seen[t]; ok {
+			return false
 		}
-		result = append(result, el)
-		seen[el] = struct{}{}
-	}
-	return result
+		seen[t] = struct{}{}
+		return true
+	})
 }
 
 // Remove will remove from the slice
@@ -144,32 +150,34 @@ func Remove[T comparable](xs []T, d T) []T {
 // RemoveAll removes all occurances of
 // the given value in the slice
 func RemoveAll[T comparable](xs []T, v T) []T {
-	var result []T
-	for _, x := range xs {
-		if x != v {
-			result = append(result, x)
-		}
-	}
-	return result
+	return Filter(xs, func(t T) bool {
+		return t != v
+	})
 }
 
 // Reverse reverses the order of a slice
 func Reverse[T any](a []T) []T {
-	for i := 0; i < len(a)/2; i++ {
-		pos := len(a) - i - 1
+	for i, l := 0, len(a); i < l/2; i++ {
+		pos := l - 1 - i
 		a[i], a[pos] = a[pos], a[i]
 	}
 	return a
 }
 
-// Intersection returns the intersection of two slices
+// Intersection returns the intersection of two slices,
+// a slice of everything contained in both slices.
 func Intersection[T comparable](as []T, bs []T) []T {
 	return Filter(as, func(a T) bool {
 		return Contains(bs, a)
 	})
 }
 
-// Union returns the union of two slices
+/*
+Union returns the union of two slices
+
+Duplicates in the first slice will be left.
+Duplicates in the second slice will be removed.
+*/
 func Union[T comparable](as []T, bs []T) []T {
 	for _, b := range bs {
 		if !Contains(as, b) {

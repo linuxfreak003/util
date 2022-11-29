@@ -171,21 +171,6 @@ func TestMaps(t *testing.T) {
 	})
 }
 
-func TestSort(t *testing.T) {
-	assert := assert.New(t)
-	t.Run("BubbleSort", func(t *testing.T) {
-		in := []int{1, 4, 3, 2}
-		out := slice.BubbleSort(in)
-		assert.Equal(out, []int{1, 2, 3, 4})
-	})
-
-	t.Run("DumbSort", func(t *testing.T) {
-		in := []int{1, 4, 3, 2}
-		out := slice.DumbSort(in)
-		assert.Equal(out, []int{1, 2, 3, 4})
-	})
-}
-
 func TestCache(t *testing.T) {
 	assert := assert.New(t)
 	t.Run("Use cache", func(t *testing.T) {
