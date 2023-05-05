@@ -4,7 +4,41 @@ package slice
 
 import (
 	"math/rand"
+
+	"golang.org/x/exp/constraints"
 )
+
+// Max returns the maximum element in a slice
+func Max[A constraints.Ordered](as []A) A {
+	return MinFunc(as, func(a, b A) bool { return a > b })
+}
+
+// Min returns the minimum element in a slice
+func Min[A constraints.Ordered](as []A) A {
+	return MinFunc(as, func(a, b A) bool { return a < b })
+}
+
+// MaxFunc returns the maximum element in a slice
+// using a given "less than" function
+func MaxFunc[A any](as []A, less func(A, A) bool) A {
+	return MinFunc(as, func(a, b A) bool { return less(b, a) })
+}
+
+// MinFunc returns the minimum element in a slice
+// using a given "less than function"
+func MinFunc[A any](as []A, less func(A, A) bool) A {
+	var result A
+	if len(as) == 0 {
+		return result
+	}
+	result = as[0]
+	for _, a := range as {
+		if less(a, result) {
+			result = a
+		}
+	}
+	return result
+}
 
 // Map create a new slice from an existing one
 // using a map function
@@ -119,9 +153,9 @@ func Filter[T any](in []T, f func(T) bool) (out []T) {
 /* TODO: Add options here
 Options:
 * KeepFirst
-* KeepLast
-* MergeFunc
-* EqualityFunc
+* KeepLast int
+* MergeFunc func (T, T) T
+* HashFunc func (T) []byte
 */
 
 // Deduplicate removes duplicates in a slice

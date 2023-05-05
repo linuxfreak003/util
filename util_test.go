@@ -46,6 +46,13 @@ func TestUtils(t *testing.T) {
 //revive:disable:empty-lines
 func TestSlices(t *testing.T) {
 	assert := assert.New(t)
+	t.Run("Max and Min", func(t *testing.T) {
+		in := []int{1, 6, 3, -5, 5, 18, 7, 3, 24, 2, 5}
+		out := slice.Max(in)
+		assert.Equal(out, 24)
+		out = slice.Min(in)
+		assert.Equal(out, -5)
+	})
 	t.Run("Map", func(t *testing.T) {
 		in := []int{1, 2, 3, 4}
 		out := slice.Map(in, func(i int) int { return i * i })
